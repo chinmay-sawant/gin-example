@@ -23,7 +23,9 @@ func NewEmployeeController(repo repo.EmployeeRepository) *EmployeeController {
 	}
 }
 
-// RegisterRoutes registers employee routes to the provided router group
+// RegisterRoutes registers the employee routes with the given router group.
+// RegisterRoutes sets up the employee API routes on the specified router group
+
 func (ec *EmployeeController) RegisterRoutes(router *gin.RouterGroup) {
 	employees := router.Group("/employees")
 	{
@@ -36,6 +38,15 @@ func (ec *EmployeeController) RegisterRoutes(router *gin.RouterGroup) {
 }
 
 // GetEmployees handles GET request to fetch all employees
+// GetEmployees godoc
+// @Summary Get all employees
+// @Description Retrieves all employees from the database
+// @Tags employees
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Employee
+// @Failure 500 {object} map[string]interface{} "Error response"
+// @Router /employees [get]
 func (ec *EmployeeController) GetEmployees(c *gin.Context) {
 	employees, err := ec.employeeService.GetAllEmployees()
 	if err != nil {
@@ -46,6 +57,16 @@ func (ec *EmployeeController) GetEmployees(c *gin.Context) {
 }
 
 // GetEmployee handles GET request to fetch a specific employee by ID
+// @Summary Get employee by ID
+// @Description Retrieves a specific employee by their ID
+// @Tags employees
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee ID"
+// @Success 200 {object} models.Employee
+// @Failure 400 {object} map[string]interface{} "Invalid employee ID"
+// @Failure 404 {object} map[string]interface{} "Employee not found"
+// @Router /employees/{id} [get]
 func (ec *EmployeeController) GetEmployee(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 32)
@@ -63,6 +84,16 @@ func (ec *EmployeeController) GetEmployee(c *gin.Context) {
 }
 
 // CreateEmployee handles POST request to create a new employee
+// @Summary Create employee
+// @Description Creates a new employee record
+// @Tags employees
+// @Accept json
+// @Produce json
+// @Param employee body models.Employee true "Employee object"
+// @Success 201 {object} models.Employee
+// @Failure 400 {object} map[string]interface{} "Invalid request data"
+// @Failure 500 {object} map[string]interface{} "Error response"
+// @Router /employees [post]
 func (ec *EmployeeController) CreateEmployee(c *gin.Context) {
 	var employee models.Employee
 	if err := c.ShouldBindJSON(&employee); err != nil {
@@ -85,6 +116,17 @@ func (ec *EmployeeController) CreateEmployee(c *gin.Context) {
 }
 
 // UpdateEmployee handles PUT request to update an existing employee
+// @Summary Update employee
+// @Description Updates an existing employee record
+// @Tags employees
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee ID"
+// @Param employee body models.Employee true "Updated employee object"
+// @Success 200 {object} models.Employee
+// @Failure 400 {object} map[string]interface{} "Invalid employee ID or request data"
+// @Failure 500 {object} map[string]interface{} "Error response"
+// @Router /employees/{id} [put]
 func (ec *EmployeeController) UpdateEmployee(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 32)
@@ -109,6 +151,16 @@ func (ec *EmployeeController) UpdateEmployee(c *gin.Context) {
 }
 
 // DeleteEmployee handles DELETE request to remove an employee
+// @Summary Delete employee
+// @Description Removes an employee from the database
+// @Tags employees
+// @Accept json
+// @Produce json
+// @Param id path int true "Employee ID"
+// @Success 200 {object} map[string]interface{} "Success message"
+// @Failure 400 {object} map[string]interface{} "Invalid employee ID"
+// @Failure 500 {object} map[string]interface{} "Error response"
+// @Router /employees/{id} [delete]
 func (ec *EmployeeController) DeleteEmployee(c *gin.Context) {
 	idParam := c.Param("id")
 	id, err := strconv.ParseUint(idParam, 10, 32)

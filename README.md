@@ -27,17 +27,19 @@ A simple employee management system built with Go and Gin framework, showcasing 
 
 - Clean architecture with separation of concerns
 - Interface-based service and controller layers for better testability and flexibility
-- Repository pattern for all database interactions
+- Repository pattern for all database interactions (no DB logic in service layer)
 - RESTful API endpoints for CRUD operations
-- SQLite database with GORM ORM
+- SQLite database with GORM ORM (using pure Go driver, no CGO required)
+
 
 ## API Endpoints
 
 - `GET /api/v1/employees` - Get all employees
-- `GET /api/v1/employees/:id` - Get a specific employee
+- `GET /api/v1/employees/{id}` - Get a specific employee
 - `POST /api/v1/employees` - Create a new employee
-- `PUT /api/v1/employees/:id` - Update an existing employee
-- `DELETE /api/v1/employees/:id` - Delete an employee
+- `PUT /api/v1/employees/{id}` - Update an existing employee
+- `DELETE /api/v1/employees/{id}` - Delete an employee
+
 
 ## How to Run
 
@@ -47,6 +49,16 @@ go run main.go
 ```
 
 The server will start on http://localhost:8080
+
+## Swagger/OpenAPI Documentation
+
+Swagger UI is available at: [http://localhost:8080/swagger/index.html](http://localhost:8080/swagger/index.html)
+
+If you change your API, regenerate docs with:
+```bash
+go install github.com/swaggo/swag/cmd/swag@latest
+swag init
+```
 
 ## Example API Usage
 
@@ -66,10 +78,10 @@ curl http://localhost:8080/api/v1/employees
 
 This project follows a clean architecture pattern with the following layers:
 
-1. **Controllers**: Handle HTTP requests and responses
-2. **Services**: Implement business logic (with interfaces)
+1. **Controllers**: Handle HTTP requests and responses (use interfaces)
+2. **Services**: Implement business logic (use interfaces, no DB logic)
 3. **Models**: Define data structures
-4. **Repository**: Handles all database interactions (no DB logic in service)
+4. **Repository**: Handles all database interactions (all DB logic here)
 5. **Database**: Handles database connections and migrations
 
 ## Notes
@@ -77,3 +89,4 @@ This project follows a clean architecture pattern with the following layers:
 - All database logic is in the `repo` package, following the repository pattern.
 - Both service and controller layers use interfaces and dependency injection.
 - The project is easily extensible and testable due to this separation.
+- Uses pure Go SQLite driver for maximum portability (no CGO required).
