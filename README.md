@@ -103,7 +103,30 @@ This project follows a clean architecture pattern with the following layers:
 
 ## Notes
 
+
 - All database logic is in the `repo` package, following the repository pattern.
 - Both service and controller layers use interfaces and dependency injection.
 - The project is easily extensible and testable due to this separation.
 - Uses pure Go SQLite driver for maximum portability (no CGO required).
+
+## Test Suite Usage & Benefits
+
+This project uses [testify/suite](https://pkg.go.dev/github.com/stretchr/testify/suite) for writing unit tests for both service and controller layers. Instead of plain test functions, we use test suites for the following benefits:
+
+- **Shared Setup and Teardown:** Common setup (e.g., mock initialization) and teardown logic is handled in `SetupTest` and `TearDownTest` methods, reducing code duplication and ensuring consistent test environments.
+- **Cleaner, More Organized Tests:** Grouping related tests into a suite makes the codebase easier to navigate and maintain, especially as the number of tests grows.
+- **Easier Mock Management:** Mocks (e.g., GoMock) are created and cleaned up automatically for each test, preventing cross-test interference.
+- **Consistent Assertions:** All assertions use the suite's built-in assertion methods, providing a uniform style and better error messages.
+- **Extensible:** Adding new tests or shared helpers is straightforward—just add new methods to the suite struct.
+
+### Example
+
+See `controllers/employee_controller_impl_test.go` and `service/employee_service_impl_test.go` for examples of using testify suites with GoMock-based mocks.
+
+### Other Differences
+
+- **Test Structure:** All tests for a given layer (controller/service) are grouped in a single suite struct, rather than as standalone functions.
+- **Mock Usage:** Mocks are injected via the suite struct, not as local variables in each test.
+- **Naming:** Test methods are named as `TestXxx` on the suite struct, and the suite is run with `suite.Run(...)`.
+
+This approach leads to more maintainable, scalable, and robust tests compared to plain test functions.
