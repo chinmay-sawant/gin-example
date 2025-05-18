@@ -7,17 +7,34 @@ A simple employee management system built with Go and Gin framework, showcasing 
 ```
 .
 ├── controllers/         # HTTP request handlers (interface-based)
-│   └── employee_controller.go
+│   ├── employee_controller.go         # Interface
+│   ├── employee_controller_impl.go    # Implementation
+│   └── mocks/                        # Generated controller mocks
+│       └── mock_employee_controller.go
 ├── db/                  # Database configuration
 │   └── database.go
 ├── models/              # Data models
 │   └── employee.go
 ├── repo/                # Data access layer (repository pattern)
 │   ├── employee_repo.go         # Interface
-│   └── employee_repo_impl.go    # Implementation
+│   ├── employee_repo_impl.go    # Implementation
+│   └── mocks/                  # Generated repo mocks
+│       └── mock_employee_repo.go
 ├── service/             # Business logic (interface-based)
 │   ├── employee_service.go       # Interface
-│   └── employee_service_impl.go  # Implementation
+│   ├── employee_service_impl.go  # Implementation
+│   └── mocks/                   # Generated service mocks
+│       └── mock_employee_service.go
+## Mocking & Testing
+
+- All interfaces (in `controllers/`, `service/`, and `repo/`) can be mocked for unit testing.
+- Mocks are generated using [mockgen](https://go.uber.org/mock/gomock).
+- Generated mocks are placed in the `mocks/` subdirectory of each package.
+- Example command to generate a mock for the `EmployeeService` interface:
+  ```cmd
+  mockgen -source=service/employee_service.go -destination=service/mocks/mock_employee_service.go -package=mocks
+  ```
+- Use these mocks in your tests with [testify](https://github.com/stretchr/testify) for assertions.
 ├── go.mod               # Go module file
 ├── main.go              # Entry point
 └── README.md            # Documentation
