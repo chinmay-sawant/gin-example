@@ -45,3 +45,11 @@ clean-mocks:
 			del /Q "%%d\mocks\*.go" 2>nul || echo No mocks to clean in %%d. \
 		) \
 	)
+
+# Run target
+.PHONY: run
+run:
+	@echo Initializing Swagger...
+	@swag init
+	@echo Starting the application...
+	@go run main.go
